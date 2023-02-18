@@ -6,15 +6,14 @@ import numpy as np
 
 
 @st.cache_data
-def load_data():
-    url = 'https://census-trade-gateway3-7kt8jtbo.uk.gateway.dev/topten'
+def load_data(url):
     data = pd.read_csv(url)
     return data
 
-def load_topten():
+def load_wrapper(url):
     data_load_state = st.text('Loading data...')
-    data = load_data()
-    data_load_state.text("Done! (using st.cache_data)")
+    data = load_data(url)
+    data_load_state.text("Done loading data!")
     
     if st.checkbox('Show raw data'):
         st.subheader('Raw data')
@@ -63,14 +62,45 @@ def draw_topten_percent(data: pd.DataFrame):
 
 def draw_topten():
     
-    st.subheader('Top ten ports by combined bilateral trade, most recent 12 months')
+    st.header('Top ten ports by combined imports and exports, most recent 12 months')
     
-    data = load_topten()
+    url = 'https://census-trade-gateway3-7kt8jtbo.uk.gateway.dev/topten'
+    
+    data = load_wrapper(url)
     
     draw_topten_nominal(data)
     
     draw_topten_percent(data)
 
 
+
+def draw_newyork():
+    
+    st.header('Top trading partners for ports in NY port districts')
+    
+    url = 'https://census-trade-gateway3-7kt8jtbo.uk.gateway.dev/newyork'
+    
+    data = load_data(url)
+    
+    st.subheader('Top trading partner by port, for ports in NY port districts')
+    st.write(data)
+    
+
+def draw_california():
+    
+    st.header('Top import commodities for ports in CA port districts')
+    
+    url = 'https://census-trade-gateway3-7kt8jtbo.uk.gateway.dev/california'
+    
+    data = load_data(url)
+    
+    st.subheader('Top imports to CA port districts')
+    st.write(data)
+
+
+
+
 st.title('International Trade at US Ports')
 draw_topten()
+draw_newyork()
+draw_california()
