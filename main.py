@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-
+"""
 st.title('Uber pickups in NYC')
 
 DATE_COLUMN = 'date/time'
@@ -34,3 +34,36 @@ filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
 
 st.subheader('Map of all pickups at %s:00' % hour_to_filter)
 st.map(filtered_data)
+"""
+
+st.title('International Trade at US Ports')
+
+DATE_COLUMN = 'date/time'
+DATA_URL = 'https://census-trade-gateway3-7kt8jtbo.uk.gateway.dev/topten'
+
+@st.cache_data
+def load_data(nrows):
+    data = pd.read_csv(DATA_URL)
+    return data
+
+data_load_state = st.text('Loading data...')
+data = load_data()
+data_load_state.text("Done! (using st.cache_data)")
+
+if st.checkbox('Show raw data'):
+    st.subheader('Raw data')
+    st.write(data)
+
+st.subheader('Top ten ports by combined import and export trade, most recent 12 months')
+# hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
+st.bar_chart(data.set_index('PORT')['Total Trade, USD bn'])
+
+"""
+# Some number in the range 0-23
+hour_to_filter = st.slider('hour', 0, 23, 17)
+filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
+
+st.subheader('Map of all pickups at %s:00' % hour_to_filter)
+st.map(filtered_data)
+"""
+
