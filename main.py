@@ -56,14 +56,22 @@ if st.checkbox('Show raw data'):
 
 st.subheader('Top ten ports by combined import and export trade, most recent 12 months')
 # hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
-st.bar_chart(data.set_index('PORT')['Total Trade, USD bn'])
+# st.bar_chart(data.set_index('PORT')['Total Trade, USD bn'])
 
-"""
-# Some number in the range 0-23
-hour_to_filter = st.slider('hour', 0, 23, 17)
-filtered_data = data[data[DATE_COLUMN].dt.hour == hour_to_filter]
+####################
 
-st.subheader('Map of all pickups at %s:00' % hour_to_filter)
-st.map(filtered_data)
-"""
+import streamlit as st
+import pandas as pd
+import numpy as np
+import altair as alt
+
+source = data.melt(id_vars = ['PORT'])
+
+c = alt.Chart(source).mark_bar().encode(
+    x='PORT',
+    y='sum(value)',
+    color='variable'
+)
+
+st.altair_chart(c, use_container_width=True)
 
