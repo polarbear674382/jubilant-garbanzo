@@ -85,4 +85,4 @@ aggregate_total = x.loc[~idx, 'Total Trade, USD bn'].iloc[0]
 port_pct = port_bilateral / aggregate_total * 100
 port_pct.name = 'Percentage of total import and export trade'
 st.subheader('Top ten ports by combined import and export trade, most recent 12 months, percent of total')
-st.bar_chart(port pct)
+st.bar_chart(port_pct)
