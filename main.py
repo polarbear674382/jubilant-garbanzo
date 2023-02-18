@@ -42,7 +42,7 @@ DATE_COLUMN = 'date/time'
 DATA_URL = 'https://census-trade-gateway3-7kt8jtbo.uk.gateway.dev/topten'
 
 @st.cache_data
-def load_data(nrows):
+def load_data():
     data = pd.read_csv(DATA_URL)
     return data
 
