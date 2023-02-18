@@ -68,7 +68,7 @@ import altair as alt
 # stacked bars separating exports and imports
 idx = data['PORT'] != 'TOTAL FOR ALL PORTS'
 
-source = data.loc[idx].melt(id_vars = ['PORT'])
+source = data.loc[idx].drop('Total Trade, USD bn', axis=1).melt(id_vars = ['PORT'])
 
 c = alt.Chart(source).mark_bar().encode(
     x='sum(value)',
@@ -85,4 +85,4 @@ aggregate_total = data.loc[~idx, 'Total Trade, USD bn'].iloc[0]
 port_pct = port_bilateral / aggregate_total * 100
 port_pct.name = 'Percentage of total import and export trade'
 st.subheader('Top ten ports by combined import and export trade, most recent 12 months, percent of total')
-st.bar_chart(port_pct)
+st.bar_chart(port_pct.T)
