@@ -89,7 +89,7 @@ port_pct.name = 'Percentage of total import and export trade'
 port_pct_df = port_pct.reset_index()
 st.subheader('Top ten ports by combined import and export trade, most recent 12 months, percent of total')
 
-c = alt.Chart(source).mark_bar().encode(
+c = alt.Chart(port_pct_df).mark_bar().encode(
     x='Percentage of total import and export trade',
     y='PORT',
 )
