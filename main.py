@@ -54,7 +54,7 @@ if st.checkbox('Show raw data'):
     st.subheader('Raw data')
     st.write(data)
 
-st.subheader('Top ten ports by combined import and export trade, most recent 12 months')
+st.subheader('Top ten ports by combined bilateral trade, most recent 12 months')
 # hist_values = np.histogram(data[DATE_COLUMN].dt.hour, bins=24, range=(0,24))[0]
 # st.bar_chart(data.set_index('PORT')['Total Trade, USD bn'])
 
@@ -66,6 +66,7 @@ import numpy as np
 import altair as alt
 
 # stacked bars separating exports and imports
+st.subheader('Nominal')
 idx = data['PORT'] != 'TOTAL FOR ALL PORTS'
 
 source = data.loc[idx].drop('Total Trade, USD bn', axis=1).melt(id_vars = ['PORT'])
@@ -80,9 +81,17 @@ st.altair_chart(c, use_container_width=True)
 
 
 # merged bar showing percent of total bilateral trade
+st.subheader('Percent of total for all ports')
 port_bilateral = data[idx].set_index('PORT')['Total Trade, USD bn']
 aggregate_total = data.loc[~idx, 'Total Trade, USD bn'].iloc[0]
 port_pct = port_bilateral / aggregate_total * 100
 port_pct.name = 'Percentage of total import and export trade'
+port_pct_df = port_pct.reset_index()
 st.subheader('Top ten ports by combined import and export trade, most recent 12 months, percent of total')
-st.bar_chart(port_pct.T)
+
+c = alt.Chart(source).mark_bar().encode(
+    x='Percentage of total import and export trade',
+    y='PORT',
+)
+
+st.altair_chart(c, use_container_width=True)
